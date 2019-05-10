@@ -1,0 +1,45 @@
+.arena-extension-icon {
+  color: #fff;
+  text-align: center;
+  padding: 4px 9px 2px !important;
+  margin-top: 1px;
+  min-width: 40px;
+  max-height: 28px;
+  margin-right: 4px;
+  background: #4d4d4d;
+  display: inline-block;
+  cursor: pointer;
+  font-family: 'Times New Roman';
+  font-size: 18px;
+}
+
+#arenaExtensionToast {
+  visibility: hidden;
+  min-width: 250px;
+  margin-left: -125px;
+  background-color: #4d4d4d;
+  color: #fff;
+  text-align: center;
+  border-radius: 2px;
+  padding: 16px;
+  position: fixed;
+  z-index: 1000;
+  left: 50%;
+  bottom: 30px;
+  font-size: 18px;
+}
+
+#arenaExtensionToast.show {
+  visibility: visible;
+  animation: toastFadeIn 0.5s, toastFadeOut 0.5s 2.5s;
+}
+
+@keyframes toastFadeIn {
+  from {bottom: 0; opacity: 0;}
+  to {bottom: 30px; opacity: 1;}
+}
+
+@keyframes toastFadeOut {
+  from {bottom: 30px; opacity: 1;}
+  to {bottom: 0; opacity: 0;}
+}

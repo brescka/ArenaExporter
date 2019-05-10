@@ -1,0 +1,47 @@
+{
+  "name": "Arena Exporter",
+  "version": "1.0",
+  "description": "Easily copy Magic: The Gathering Decks to your clipboard in an Arena friendly format.",
+  "permissions": [
+    "activeTab",
+    "storage"
+  ],
+  "icons": {
+    "16": "assets/icons/icon16.png",
+    "24": "assets/icons/icon24.png",
+    "32": "assets/icons/icon32.png",
+    "40": "assets/icons/icon40.png",
+    "48": "assets/icons/icon48.png",
+    "64": "assets/icons/icon64.png",
+    "128": "assets/icons/icon128.png"
+  },
+  "browser_action": {
+    "default_title": "Arena Importer",
+    "default_icon": {
+      "16": "assets/icons/icon16.png",
+      "24": "assets/icons/icon24.png",
+      "32": "assets/icons/icon32.png",
+      "40": "assets/icons/icon40.png",
+      "48": "assets/icons/icon48.png",
+      "64": "assets/icons/icon64.png",
+      "128": "assets/icons/icon128.png"
+    },
+    "default_popup": "src/popup.html"
+  },
+  "background": {
+    "scripts": ["src/js/background.js"],
+    "persistent": false
+  },
+  "content_scripts": [
+    {
+      "matches": ["*://magic.wizards.com/*"],
+      "js": ["src/js/content.js"],
+      "css": ["src/css/content.css"],
+      "run_at": "document_end"
+    }
+  ],
+  "manifest_version": 2,
+  "web_accessible_resources": [
+    "assets/icons/*"
+  ]
+}
