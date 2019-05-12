@@ -104,7 +104,6 @@
       const lookupKey = name.split('//')[0].trim()
       chrome.storage.local.get(lookupKey, function (data) {
         if (Object.keys(data).includes(lookupKey)) {
-          console.log(data)
           const set = data[lookupKey].set
           const number = data[lookupKey].number.replace(/\D/g, '')
           if (language !== 'English') {
