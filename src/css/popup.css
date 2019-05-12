@@ -1,0 +1,51 @@
+html, body {
+  height:200px !important;
+  width: 250px !important;
+}
+
+.content-container {
+  height:200px !important;
+  width: 240px !important;
+  margin: auto;
+}
+
+.extension-title {
+  margin-top: 7px;
+  margin-bottom: 20px;
+}
+
+.external-link {
+  font-size: 18px;
+}
+
+.select-dropdown {
+  overflow-y: auto !important;
+  max-height: 150px !important;
+}
+
+ul {
+  background-color: aliceblue !important;
+}
+
+li:last-of-type > img {
+  padding-top: 5px;
+  padding-bottom: 5px;
+}
+
+li span {
+  color: black !important;
+}
+
+.input-field label {
+  left: 0 !important;
+}
+
+/* .select-wrapper {
+  overflow: auto;
+  height: 200px !important;
+}
+
+.select-wrapper ul {
+  height: 200px !important;
+  width: 200px !important;
+} */
