@@ -24,9 +24,8 @@ for (const setName of Object.keys(standardJSON)) {
     // Filtering mythic edition cards
     return !card.number.includes('★')
   }).filter((card) => {
-    // WAR cards are guarenteed to have translation data. Will open pull request
-    // with MTGJSON to address the basic lands that do not contain translation data.
-    return !(basicLands.includes(card.name) && setName !== 'WAR')
+    // Remove those cards with no translations
+    return Object.keys(card.translations).length > 0
   })
   const name = setName === 'DOM' ? 'DAR' : setName
   const reducedSet = {
