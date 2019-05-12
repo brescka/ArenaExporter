@@ -1,15 +1,15 @@
-chrome.runtime.onInstalled.addListener(function(details){
-  if(details.reason === chrome.runtime.OnInstalledReason.INSTALL){
+chrome.runtime.onInstalled.addListener(function (details) {
+  if (details.reason === chrome.runtime.OnInstalledReason.INSTALL) {
     initializeDatabase()
   }
-});
+})
 
-async function initializeDatabase() {
+async function initializeDatabase () {
   const response = await fetch(chrome.extension.getURL('/data/reduced.json'))
   const setJSON = await response.json()
-  for (set of setJSON.sets) {
+  for (const set of setJSON.sets) {
     const cards = {}
-    for (card of set.cards) {
+    for (const card of set.cards) {
       cards[`${card.name}`] = {
         number: card.number,
         translations: card.translations,
@@ -18,5 +18,5 @@ async function initializeDatabase() {
     }
     chrome.storage.local.set(cards)
   }
-  chrome.storage.local.set({language: 'English'})
+  chrome.storage.local.set({ language: 'English' })
 }

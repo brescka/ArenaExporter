@@ -3,7 +3,9 @@
   "version": "1.0",
   "standard": {
     "globals": [
-      "chrome"
+      "chrome",
+      "M",
+      "fetch"
     ]
   },
   "devDependencies": {
