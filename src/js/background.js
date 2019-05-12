@@ -18,4 +18,5 @@ async function initializeDatabase() {
     }
     chrome.storage.local.set(cards)
   }
+  chrome.storage.local.set({language: 'English'})
 }
