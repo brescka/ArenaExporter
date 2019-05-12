@@ -1,12 +1,18 @@
 html, body {
-  height:200px !important;
+  height:205px !important;
   width: 250px !important;
+}
+
+main {
+  flex: 1
 }
 
 .content-container {
   height:200px !important;
   width: 240px !important;
   margin: auto;
+  display: flex;
+  flex-direction: column;
 }
 
 .extension-title {
@@ -40,12 +46,6 @@ li span {
   left: 0 !important;
 }
 
-/* .select-wrapper {
-  overflow: auto;
-  height: 200px !important;
+footer a {
+  margin-right: 10px;
 }
-
-.select-wrapper ul {
-  height: 200px !important;
-  width: 200px !important;
-} */
