@@ -100,20 +100,52 @@
   async function getCardDetails (cardContainer, language) {
     const count = cardContainer.getElementsByClassName('card-count')[0].textContent
     let name = cardContainer.getElementsByClassName('card-name')[0].textContent
-    return new Promise((resolve, reject) => {
+    return new Promise(async (resolve) => {
       const lookupKey = name.split('//')[0].trim()
-      chrome.storage.local.get(lookupKey, function (data) {
-        if (Object.keys(data).includes(lookupKey)) {
-          const set = data[lookupKey].set
-          const number = data[lookupKey].number.replace(/\D/g, '')
+      try {
+        cardData = await queryDatabase(lookupKey, language)
+      } catch {
+        const closestMatch = await findClosestMatch(lookupKey)
+        cardData = await queryDatabase(closestMatch, language)
+      }
+      resolve(`${count} ${cardData}`)
+    })
+  }
+
+  // Helper function that handles querrying for card data and returning
+  // a string containing the card's data in a digestable format.
+  async function queryDatabase(key, language) {
+    return new Promise((resolve, reject)=> {
+      chrome.storage.local.get(key, function (data) {
+        if (Object.keys(data).includes(key)) {
+          let name = key
+          const set = data[key].set
+          const number = data[key].number.replace(/\D/g, '')
           if (language !== 'English') {
-            name = data[lookupKey].translations[language]
+            name = data[key].translations[language]
           }
-          resolve(`${count} ${name} (${set}) ${number}`)
+          resolve(`${name} (${set}) ${number}`)
         } else {
           reject(new Error(`Could not find card data for ${name}`))
         }
       })
+    })
+  }
+
+  // This function is called in times where the decklist contains 
+  // anomalies in its name. It leverages levenshtein distance
+  // to determine the closest match.
+  async function findClosestMatch(cardName) {
+    return new Promise((resolve) => {
+      chrome.storage.local.get(null, function(items) {
+        const allTitles = Object.keys(items);
+        const closestMatch = allTitles.reduce((a, b) => {
+          const aDistance = levenshtein(cardName, a)
+          const bDistance = levenshtein(cardName, b)
+          return aDistance <= bDistance ? a : b
+        })
+        resolve(closestMatch)
+      });
     })
   }
 
@@ -144,10 +176,105 @@
   }
 
   // Helper function that adds the class that allows the toast to be visible,
-  // then removes it after a set time
+  // then removes it after a set time. Can be improved by debouncing the hiding
+  // function, ensuring multiple fast clicks dont trigger weird animation glitches
   function revealToast (length) {
     const toast = document.getElementById('arenaExtensionToast')
     toast.classList.add('show')
     setTimeout(() => toast.classList.remove('show'), length)
   }
+
+  function levenshtein(a, b) {
+    if (a === b) {
+      return 0;
+    }
+
+    if (a.length > b.length) {
+      var tmp = a;
+      a = b;
+      b = tmp;
+    }
+
+    var la = a.length;
+    var lb = b.length;
+
+    while (la > 0 && (a.charCodeAt(la - 1) === b.charCodeAt(lb - 1))) {
+      la--;
+      lb--;
+    }
+
+    var offset = 0;
+
+    while (offset < la && (a.charCodeAt(offset) === b.charCodeAt(offset))) {
+      offset++;
+    }
+
+    la -= offset;
+    lb -= offset;
+
+    if (la === 0 || lb < 3) {
+      return lb;
+    }
+
+    var x = 0;
+    var y;
+    var d0;
+    var d1;
+    var d2;
+    var d3;
+    var dd;
+    var dy;
+    var ay;
+    var bx0;
+    var bx1;
+    var bx2;
+    var bx3;
+
+    var vector = [];
+
+    for (y = 0; y < la; y++) {
+      vector.push(y + 1);
+      vector.push(a.charCodeAt(offset + y));
+    }
+
+    var len = vector.length - 1;
+
+    for (; x < lb - 3;) {
+      bx0 = b.charCodeAt(offset + (d0 = x));
+      bx1 = b.charCodeAt(offset + (d1 = x + 1));
+      bx2 = b.charCodeAt(offset + (d2 = x + 2));
+      bx3 = b.charCodeAt(offset + (d3 = x + 3));
+      dd = (x += 4);
+      for (y = 0; y < len; y += 2) {
+        dy = vector[y];
+        ay = vector[y + 1];
+        d0 = levenshteinMin(dy, d0, d1, bx0, ay);
+        d1 = levenshteinMin(d0, d1, d2, bx1, ay);
+        d2 = levenshteinMin(d1, d2, d3, bx2, ay);
+        dd = levenshteinMin(d2, d3, dd, bx3, ay);
+        vector[y] = dd;
+        d3 = d2;
+        d2 = d1;
+        d1 = d0;
+        d0 = dy;
+      }
+    }
+
+    for (; x < lb;) {
+      bx0 = b.charCodeAt(offset + (d0 = x));
+      dd = ++x;
+      for (y = 0; y < len; y += 2) {
+        dy = vector[y];
+        vector[y] = dd = levenshteinMin(dy, d0, dd, bx0, vector[y + 1]);
+        d0 = dy;
+      }
+    }
+
+    return dd;
+  }
+
+  function levenshteinMin(d0, d1, d2, bx, ay){
+    return d0 < d1 || d2 < d1 ? d0 > d2 ? d2 + 1 : d0 + 1 : bx === ay ? d1 : d1 + 1;
+  }
+  
 })()
