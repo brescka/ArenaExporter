@@ -133,10 +133,12 @@
   }
 
   // This function is called in times where the decklist contains 
-  // anomalies in its name. It leverages levenshtein distance
-  // to determine the closest match.
+  // anomalies in its name and we cannot find an exact match. It leverages 
+  // levenshtein distance to determine the closest match.
   async function findClosestMatch(cardName) {
     return new Promise((resolve) => {
+      // I don't want an arary of thousands of items just taking up memory for fringe cases,
+      // so this list of all card titles is created on demand and released shortly thereafter.
       chrome.storage.local.get(null, function(items) {
         const allTitles = Object.keys(items);
         const closestMatch = allTitles.reduce((a, b) => {
@@ -184,6 +186,9 @@
     setTimeout(() => toast.classList.remove('show'), length)
   }
 
+  // Slightly restructured version of levenshtein distance calculation
+  // made by gustf (https://github.com/gustf/js-levenshtein).
+  // All credit to that repo and usage here licensed under MIT (https://opensource.org/licenses/MIT)
   function levenshtein(a, b) {
     if (a === b) {
       return 0;
