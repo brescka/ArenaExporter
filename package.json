@@ -1,6 +1,7 @@
 {
-  "name": "flipper",
+  "name": "arenaexporter",
   "version": "1.0",
+  "private": true,
   "standard": {
     "globals": [
       "chrome",
