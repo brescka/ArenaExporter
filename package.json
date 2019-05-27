@@ -10,8 +10,5 @@
   },
   "devDependencies": {
     "standard": "^12.0.1"
-  },
-  "dependencies": {
-    "bulma": "^0.7.4"
   }
 }
