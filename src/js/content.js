@@ -97,6 +97,7 @@
   // Helper function that traverses a given DOM element for its children that contain
   // the data we need for a particular card - it's name and quantity. Then uses
   // name to query local storage for set and id.
+  // TODO: Refactor this whole section
   async function getCardDetails (cardContainer, language) {
     return new Promise(async (resolve) => {
       const count = cardContainer.getElementsByClassName('card-count')[0].textContent
@@ -107,6 +108,9 @@
       let data
       try {
         data = await queryDatabase(lookupKey, language)
+        if (language !== 'English') {
+          name = data.name
+        }
       } catch (error) {
         const closestMatch = await findClosestMatch(lookupKey)
         // We reset name because the original name is what gave us
