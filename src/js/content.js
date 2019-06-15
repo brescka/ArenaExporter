@@ -49,16 +49,6 @@
     }
   }
 
-  // Retrieve the currently selected language. If the key is missing for some
-  // unknown reason, default to English.
-  async function getLanguage () {
-    return new Promise((resolve) => {
-      chrome.storage.local.get('language', function (data) {
-        resolve(Object.keys(data).includes('language') ? data.language : 'English')
-      })
-    })
-  }
-
   // getMainDeck and getSideboard traverse the DOM for deck information, then transform
   // them into arrays. It is very brittle as it depends on the host page not chaging DOM
   // structure. The API for getting decks by name does seem to be open (and powers their own
@@ -119,45 +109,6 @@
         name = data.name
       }
       resolve(`${count} ${name} (${data.set}) ${data.number}`)
-    })
-  }
-
-  // Helper function that handles querrying for card data and returning
-  // a string containing the card's data in a digestable format.
-  async function queryDatabase (key, language) {
-    return new Promise((resolve, reject) => {
-      chrome.storage.local.get(key, function (data) {
-        if (Object.keys(data).includes(key)) {
-          let name = key
-          const set = data[key].set
-          const number = data[key].number.replace(/\D/g, '')
-          if (language !== 'English') {
-            name = data[key].translations[language]
-          }
-          resolve({ name, set, number })
-        } else {
-          reject(new Error(`Could not find card data for ${key}`))
-        }
-      })
-    })
-  }
-
-  // This function is called in times where the decklist contains
-  // anomalies in its name and we cannot find an exact match. It leverages
-  // levenshtein distance to determine the closest match.
-  async function findClosestMatch (cardName) {
-    return new Promise((resolve) => {
-      // I don't want an arary of thousands of items just taking up memory for fringe cases,
-      // so this list of all card titles is created on demand and released shortly thereafter.
-      chrome.storage.local.get(null, function (items) {
-        const allTitles = Object.keys(items)
-        const closestMatch = allTitles.reduce((a, b) => {
-          const aDistance = levenshtein(cardName, a)
-          const bDistance = levenshtein(cardName, b)
-          return aDistance <= bDistance ? a : b
-        })
-        resolve(closestMatch)
-      })
     })
   }
 
