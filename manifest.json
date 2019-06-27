@@ -1,6 +1,6 @@
 {
   "name": "Arena Exporter",
-  "version": "1.1",
+  "version": "1.2",
   "description": "Easily copy Magic: The Gathering Decks to your clipboard in an Arena friendly format.",
   "permissions": [
     "activeTab",
@@ -26,17 +26,17 @@
       "64": "assets/icons/icon64.png",
       "128": "assets/icons/icon128.png"
     },
-    "default_popup": "src/popup.html"
+    "default_popup": "popup.html"
   },
   "background": {
-    "scripts": ["src/js/background.js"],
+    "scripts": ["build/background.js"],
     "persistent": false
   },
   "content_scripts": [
     {
       "matches": ["*://magic.wizards.com/*"],
-      "js": ["src/js/content.js"],
-      "css": ["src/css/content.css"],
+      "js": ["build/content.js"],
+      "css": ["build/content.css"],
       "run_at": "document_end"
     }
   ],

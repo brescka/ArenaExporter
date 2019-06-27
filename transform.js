@@ -1,3 +1,4 @@
+//TODO Better handle split cards
 const fs = require('fs')
 const standardJSON = JSON.parse(fs.readFileSync('data/standard.json'))
 const reducedSets = []
@@ -12,18 +13,19 @@ for (const setName of Object.keys(standardJSON)) {
     for (const translation of foreignData) {
       reducedForeignData[translation.language] = translation.name
     }
+    reducedForeignData['English'] = card.name
     return {
       translations: reducedForeignData,
-      name: card.name,
       number: card.number
     }
   }).filter((card) => {
     // Filtering mythic edition cards
     return !card.number.includes('★')
   }).filter((card) => {
-    // Remove those cards with no translations
-    return Object.keys(card.translations).length > 0
+    // Remove those cards with incomplete translations
+    return Object.keys(card.translations).length >= 9
   })
+  // This set's name in the JSON is not what Arena expects
   const name = setName === 'DOM' ? 'DAR' : setName
   const reducedSet = {
     name,
