@@ -74,7 +74,7 @@ function formatDeck (mainDeck, sideBoard, language) {
 // in the database to a string consumable by Arena
 function formatCard(cardData, language) {
   const {count, set, number} = cardData
-  const name = cardData.names[language]
+  const name = cardData.translations[language]
   return `${count} ${name} (${set}) ${number}`
 }
 

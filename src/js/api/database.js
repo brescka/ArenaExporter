@@ -65,11 +65,11 @@ async function findClosestMatch (cardName) {
 // Helper function for transforming data as stored in local storage
 // to supply a card's name set, and number
 function transformCardData(data) {
-  const names = data.names
+  const translations = data.translations
   const set = data.set
   // Remove any non-numeric characters in the card number
   const number = data.number.replace(/\D/g, '')
-  return { names, set, number}
+  return { translations, set, number}
 }
 
 export {
