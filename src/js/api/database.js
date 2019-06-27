@@ -1,3 +1,7 @@
+import levenshtein from 'js-levenshtein'
+// This module is the home to all calls to the database,
+// which holds both card data and language settings.
+
 // Base function for all calls to chrome local storage.
 // Returns data associated with a given key or throws
 // an error if there is none.
@@ -68,7 +72,7 @@ function transformCardData(data) {
   return { names, set, number}
 }
 
-export default {
+export {
   getLanguage,
   getCard
 }

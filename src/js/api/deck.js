@@ -1,3 +1,6 @@
+// This module is concerned with navigating a decklist's DOM elements
+// to parse card titles and request data from database API
+
 import {getLanguage, getCard} from './database.js'
 
 // getMainDeck and getSideboard traverse the DOM for deck information, then transform
@@ -75,6 +78,6 @@ function formatCard(cardData, language) {
   return `${count} ${name} (${set}) ${number}`
 }
 
-export default {
+export {
   getFormattedDeck
 }
