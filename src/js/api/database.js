@@ -1,13 +1,15 @@
-import levenshtein from 'js-levenshtein'
 // This module is the home to all calls to the database,
 // which holds both card data and language settings.
 
-// Base function for all calls to chrome local storage.
+import levenshtein from 'js-levenshtein'
+import {defaultLanguage, platform} from './constants.js'
+
+// Base function for all calls to the browser's local storage.
 // Returns data associated with a given key or throws
 // an error if there is none.
 async function queryDatabase(key) {
   return new Promise((resolve, reject) => {
-    chrome.storage.local.get(key, function (data) {
+    platform.storage.local.get(key, function (data) {
       if (Object.keys(data).includes(key)) {
         resolve(data[key])
       } else {
@@ -25,7 +27,7 @@ async function getLanguage () {
     return language
   }
   catch {
-    return 'English'
+    return defaultLanguage
   }
 }
 
@@ -37,7 +39,7 @@ async function getCard(cardName) {
     const cardData = transformCardData(rawData)
     return cardData
   } catch {
-    const closestCard = findClosestMatch(cardName)
+    const closestCard = await findClosestMatch(cardName)
     const rawData = await queryDatabase(closestCard)
     const cardData = transformCardData(rawData)
     return cardData
@@ -50,7 +52,7 @@ async function findClosestMatch (cardName) {
   return new Promise((resolve) => {
     // I don't want an arary of thousands of items just taking up memory for fringe cases,
     // so this list of all card titles is created on demand and released shortly thereafter.
-    chrome.storage.local.get(null, function (items) {
+    platform.storage.local.get(null, function (items) {
       const allTitles = Object.keys(items)
       const closestMatch = allTitles.reduce((a, b) => {
         const aDistance = levenshtein(cardName, a)

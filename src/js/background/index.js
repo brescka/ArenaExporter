@@ -1,20 +1,22 @@
-chrome.runtime.onInstalled.addListener(function () {
+import {defaultLanguage, platform} from '../api/constants.js'
+
+platform.runtime.onInstalled.addListener(function () {
   initializeDatabase()
 })
 
 async function initializeDatabase () {
-  const response = await fetch(chrome.extension.getURL('/data/reduced.json'))
+  const response = await fetch(platform.extension.getURL('/data/reduced.json'))
   const setJSON = await response.json()
   for (const set of setJSON.sets) {
     const cards = {}
     for (const card of set.cards) {
-      cards[`${card.translations['English']}`] = {
+      cards[`${card.translations[defaultLanguage]}`] = {
         number: card.number,
         translations: card.translations,
         set: set.name
       }
     }
-    chrome.storage.local.set(cards)
+    platform.storage.local.set(cards)
   }
-  chrome.storage.local.set({ language: 'English' })
+  platform.storage.local.set({ language: defaultLanguage })
 }
