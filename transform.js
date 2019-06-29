@@ -22,8 +22,9 @@ for (const setName of Object.keys(standardJSON)) {
     // Filtering mythic edition cards
     return !card.number.includes('★')
   }).filter((card) => {
-    // Remove those cards with incomplete translations
-    return Object.keys(card.translations).length >= 9
+    // Remove those cards with incomplete translations,
+    // M20 only has English translations for now. 
+    return Object.keys(card.translations).length >= 9 || setName === 'M20'
   })
   // This set's name in the JSON is not what Arena expects
   const name = setName === 'DOM' ? 'DAR' : setName
